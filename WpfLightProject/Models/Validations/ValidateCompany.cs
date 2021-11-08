@@ -31,7 +31,7 @@ namespace WpfLightProject.Models.Validations
             if (address.Length > 150)
                 return IsAddressValid = false;
 
-            if (String.IsNullOrEmpty(address))
+            if (String.IsNullOrWhiteSpace(address))
                 return IsAddressValid = false;
 
             return IsAddressValid;
@@ -68,7 +68,7 @@ namespace WpfLightProject.Models.Validations
 
         public bool ValidateName(string name)
         {
-            if (String.IsNullOrEmpty(name))
+            if (String.IsNullOrWhiteSpace(name))
                 return IsNameValid = false;
 
             if (name.Length >= 50)
