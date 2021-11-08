@@ -1,0 +1,31 @@
+﻿<Window x:Class="WpfLightProject.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WpfLightProject"
+        mc:Ignorable="d"
+        Title="Light Project - Company Registration" Height="476" Width="810">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="437*"/>
+            <ColumnDefinition Width="373*"/>
+        </Grid.ColumnDefinitions>
+        <DataGrid Name="CompanyGrid" ItemsSource="{Binding CompanyList}" AutoGenerateColumns="False"
+                      IsReadOnly="True" SelectedItem="{Binding SelectedCompany}" Margin="0,56,0,0" Grid.ColumnSpan="2">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Id" Binding="{Binding Id}"/>
+                <DataGridTextColumn Header="Razão Social" Binding="{Binding Name}"/>
+                <DataGridTextColumn Header="CNPJ" Binding="{Binding RegisterNumber}"/>
+                <DataGridTextColumn Header="Ramo" Binding="{Binding Business}"/>
+                <DataGridTextColumn Header="Data de Abertura" Binding="{Binding BirthDate}"/>
+                <DataGridTextColumn Header="Endereço" Binding="{Binding Address}"/>
+                <DataGridTextColumn Header="Tamanho" Binding="{Binding CompanySize}"/>
+                <DataGridTextColumn Header="Status" Binding="{Binding Status}"/>
+            </DataGrid.Columns>
+        </DataGrid>
+        <Button Content="Cadastrar" CommandParameter="{Binding}" Command="{Binding RegisterCommand}" HorizontalAlignment="Left" Margin="13,10,0,0" VerticalAlignment="Top" Width="98" Height="32" RenderTransformOrigin="-1.867,0.523"/>
+        <Button Content="Deletar" CommandParameter="{Binding}" Command="{Binding DeleteCommand}" HorizontalAlignment="Left" Margin="125,9,0,0" VerticalAlignment="Top" Width="98" Height="32" RenderTransformOrigin="-1.867,0.523"/>
+        <Button Content="Editar" CommandParameter="{Binding}" Command="{Binding EditCommand}" HorizontalAlignment="Left" Margin="240,9,0,0" VerticalAlignment="Top" Width="98" Height="32" RenderTransformOrigin="-1.867,0.523"/>
+    </Grid>
+</Window>
