@@ -13,7 +13,7 @@ namespace WpfLightProject.Models.Validations
         bool ValidateId(int id);
         bool ValidateName(string name);
         bool ValidateRegisterNumber(string number);
-        bool ValidateAdress(string address);
+        bool ValidateAddress(string address);
         bool ValidateBirthDate(DateTime date);
     }
 }

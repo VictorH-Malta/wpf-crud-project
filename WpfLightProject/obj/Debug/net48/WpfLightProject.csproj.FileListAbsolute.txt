@@ -31,5 +31,5 @@ C:\developer\WpfLightProject\WpfLightProject\bin\Debug\net48\System.Text.Json.dl
 C:\developer\WpfLightProject\WpfLightProject\bin\Debug\net48\System.Threading.Tasks.Extensions.dll
 C:\developer\WpfLightProject\WpfLightProject\bin\Debug\net48\System.ValueTuple.dll
 C:\developer\WpfLightProject\WpfLightProject\obj\Debug\net48\WpfLightProject.exe.config
-C:\developer\WpfLightProject\WpfLightProject\obj\Debug\net48\WpfLightProject.csproj.AssemblyReference.cache
 C:\developer\WpfLightProject\WpfLightProject\bin\Debug\net48\System.Threading.Channels.dll
+C:\developer\WpfLightProject\WpfLightProject\obj\Debug\net48\WpfLightProject.csproj.AssemblyReference.cache

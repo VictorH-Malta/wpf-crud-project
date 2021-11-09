@@ -34,3 +34,8 @@ C:\developer\WpfLightProject\WpfLightProject.Test\obj\Debug\net48\WpfLightProjec
 C:\developer\WpfLightProject\WpfLightProject.Test\obj\Debug\net48\WpfLightProject.Test.csproj.CopyComplete
 C:\developer\WpfLightProject\WpfLightProject.Test\obj\Debug\net48\WpfLightProject.Test.dll
 C:\developer\WpfLightProject\WpfLightProject.Test\obj\Debug\net48\WpfLightProject.Test.pdb
+C:\developer\WpfLightProject\WpfLightProject.Test\bin\Debug\net48\Autofac.dll
+C:\developer\WpfLightProject\WpfLightProject.Test\bin\Debug\net48\Autofac.Extras.Moq.dll
+C:\developer\WpfLightProject\WpfLightProject.Test\bin\Debug\net48\Castle.Core.dll
+C:\developer\WpfLightProject\WpfLightProject.Test\bin\Debug\net48\Moq.dll
+C:\developer\WpfLightProject\WpfLightProject.Test\bin\Debug\net48\System.Diagnostics.DiagnosticSource.dll
