@@ -49,6 +49,7 @@ namespace WpfLightProject.ViewModels
             if (registerWindow.DialogResult.HasValue && registerWindow.DialogResult.Value)
             {
                CompanyContext.Insert(company);
+               CompanyList.Add(company);
                SelectedCompany = company;
             }
         }

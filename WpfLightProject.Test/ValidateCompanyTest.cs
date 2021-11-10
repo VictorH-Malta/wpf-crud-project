@@ -1,14 +1,41 @@
 ﻿using NUnit.Framework;
 using System;
-using Moq;
 using WpfLightProject.Models.Validations;
 using WpfLightProject.Models;
 
 namespace WpfLightProject.Test
 {
+    [TestFixture]
     public class ValidateCompanyTest
     {
-        private ICompany _company;
+        private IValidateCompany _validateCompany;
+        
+        static Company[] ValidCompanies = new Company[]
+            {
+                new Company() { Address = "Rua Alberto Gomes, n 42, Apto 201, Alto Umuarama, Uberlândia-MG", Id = 2, BirthDate = DateTime.Parse("07/03/1996"), Business = BusinessBranch.HumanResource, CompanySize = Models.Enums.CompanySize.Large, Name = "Empresa do Victor", RegisterNumber = "28317258000135", Status = Status.Active },
+                new Company() { Address = "Av. Floriano Peixoto, n 5322, Apto 302, Alto Umuarama, Uberlândia-MG", Id = 5, BirthDate = DateTime.Parse("10/01/1958"), Business = BusinessBranch.IT, CompanySize = Models.Enums.CompanySize.Small, Name = "Empresa do Antonio", RegisterNumber = "68673115000180", Status = Status.Active },
+                new Company() { Address = "Rua Maria das Dores Dias, n 96, Apto 101, Santa Mônica, Uberlândia-MG", Id = 102, BirthDate = DateTime.Parse("02/02/2020"), Business = BusinessBranch.Innovation, CompanySize = Models.Enums.CompanySize.Medium, Name = "Empresa dos Garotos", RegisterNumber = "40864583000113", Status = Status.Active }
+            };
+
+        static Company[] InvalidCompanies = new Company[]
+            {
+                new Company() { Address = "", Id = -1, BirthDate = DateTime.Now, Business = BusinessBranch.Marketing, CompanySize = Models.Enums.CompanySize.Small, RegisterNumber = "12345678945", Status = Status.Active, Name = "Empresa fictícia"},
+                new Company() { Address = "Rua não nomeada", Id = 0, BirthDate = DateTime.Parse("06/10/1999"), Business = BusinessBranch.Facility, CompanySize = Models.Enums.CompanySize.Large, RegisterNumber = "51199220000127", Status = Status.Active, Name = ""},
+                new Company() { Address = "Rua fake", Id = 23, BirthDate = DateTime.Parse("01/01/2022"), Business = BusinessBranch.Engeneering, CompanySize = Models.Enums.CompanySize.Medium, RegisterNumber = "91490708000123", Status = Status.Active, Name = "Empresa fake"},
+            };
+
+        [SetUp]
+        public void Init()
+        {
+            _validateCompany = new ValidateCompany();
+        }
+
+        [TearDown]
+        public void CleanUp()
+        {
+            ValidCompanies = null;
+            InvalidCompanies = null;
+        }
 
         [Test]
         [TestCase("", false)]
@@ -19,8 +46,7 @@ namespace WpfLightProject.Test
         [TestCase("Rua José Guimarães Lima de Melo, n 1432, Bairro Granja Marileusa, Uberlândia do Estado de Minas Gerais Localizado no País Brasil e o resto do texto é.", true)]
         public void ValidateAddress_ShouldReturnFalseIfIsNullOrWhiteSpace_ReturnTrueIfValid(string address, bool expected)
         {
-            ValidateCompany validate = new ValidateCompany();
-            bool actual = validate.ValidateAddress(address);
+            bool actual = _validateCompany.ValidateAddress(address);
             Assert.AreEqual(actual, expected);
         }
 
@@ -29,10 +55,9 @@ namespace WpfLightProject.Test
         public void ValidateBirthDate_ShouldReturnFalseIfNowOrFuture()
         {
             //Arrange
-            ValidateCompany validate = new ValidateCompany();
 
             //Act
-            bool actual = validate.ValidateBirthDate(DateTime.Now.Date);
+            bool actual = _validateCompany.ValidateBirthDate(DateTime.Now.Date);
             bool expected = false;
 
             //Assert
@@ -47,9 +72,9 @@ namespace WpfLightProject.Test
         public void ValidateId_ShouldReturnFalseIfNegativeOrMaxValue(int id, bool expected)
         {
             //Arrange
-            ValidateCompany validateCompany = new ValidateCompany();
+
             //Act
-            bool actual = validateCompany.ValidateId(id);
+            bool actual = _validateCompany.ValidateId(id);
             //Assert
             Assert.AreEqual(actual, expected);
         }
@@ -63,9 +88,8 @@ namespace WpfLightProject.Test
         public void ValidateName_ShouldReturnFalseIfNullOrWhiteSpaceOrMoreThan50Char(string name, bool expected)
         {
             //Arrange
-            ValidateCompany validateCompany = new ValidateCompany();
             //Act
-            bool actual = validateCompany.ValidateName(name);
+            bool actual = _validateCompany.ValidateName(name);
             //Assert
             Assert.AreEqual(actual, expected);
         }
@@ -82,30 +106,32 @@ namespace WpfLightProject.Test
         public void ValidateRegisterNumber_ShouldReturnTrueIfValid(string number, bool expected)
         {
             //Arrange
-            ValidateCompany validateCompany = new ValidateCompany();
+
             //Act
-            bool actual = validateCompany.ValidateRegisterNumber(number);
+            bool actual = _validateCompany.ValidateRegisterNumber(number);
             //Assert
             Assert.AreEqual(actual, expected);
         }
 
-        [Test]
-        public void IsCompanyValid_ReturnsTrueIfAllTrue()
+        [TestCaseSource(nameof(ValidCompanies))]
+        public void IsCompanyValid_ReturnsTrueForValidCompanies(ICompany company)
         {
             //Arrange
-            ValidateCompany validateCompany = new ValidateCompany();
-            //Act
-            bool actual = validateCompany.IsCompanyValid(ReturnCompanyMocked());
 
+            //Act
+            bool actual = _validateCompany.IsCompanyValid(company);
             //Assert
             Assert.AreEqual(actual, true);
         }
 
-        private ICompany ReturnCompanyMocked()
+        [TestCaseSource(nameof(InvalidCompanies))]
+        public void IsCompanyValid_ReturnsFalseForInvalidCompanies(Company company)
         {
-            _company = new Company() { Address = "Rua Alberto Gomes, n 42, Apto 201, Alto Umuarama, Uberlândia-MG", Id = 2, BirthDate = DateTime.Parse("07/03/1996"), Business = BusinessBranch.HumanResource, CompanySize = Models.Enums.CompanySize.Large, Name = "Empresa do Victor", RegisterNumber = "28317258000135", Status = Status.Active };
-
-            return _company;
-        }
+            //Arrange
+            //Act
+            bool actual = _validateCompany.IsCompanyValid(company);
+            //Assert
+            Assert.AreEqual(actual, false);
+        } 
     }
 }
