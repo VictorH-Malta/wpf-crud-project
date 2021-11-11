@@ -31,24 +31,18 @@ namespace WpfLightProject.DataAccess
             DataAdapter = new SqlDataAdapter((SqlCommand)Command);
         }
 
-        public SqlServerCompanyContext(ICompany company)
-        {
-            DbConnection = new SqlConnection(ConnectionString);
-            _validateCompany = new ValidateCompany();
-            Command = new SqlCommand();
-            DataSet = new DataSet();
-            DataAdapter = new SqlDataAdapter((SqlCommand)Command);
-            Company = company;
-        }
-
-        public void Delete(ICompany company)
+        public ICompany Delete(ICompany company)
         {
             try
             {
+                if (DbConnection.State != ConnectionState.Open)
+                {
+                    DbConnection.Open();
+                }
+
                 if (_validateCompany.ValidateId(company.Id))
                 {
                     string cmd = $"DELETE FROM company WHERE id = {company.Id};";
-                    DbConnection.Open();
                     Command.CommandText = cmd;
                     Command.Connection = DbConnection;
                     Command.ExecuteNonQuery();
@@ -61,18 +55,23 @@ namespace WpfLightProject.DataAccess
             finally
             {
                 DbConnection.Close();
-                Dispose();
             }
+
+            return company;
         }
 
-        public void Insert(ICompany company)
+        public ICompany Insert(ICompany company)
         {
             try
             {
+                if (DbConnection.State != ConnectionState.Open)
+                {
+                    DbConnection.Open();
+                }
+
                 if (_validateCompany.IsCompanyValid(company))
                 {
-                    string cmd = $"INSERT INTO company (id, company_name, cnpj, business_branch, open_date, adress, status, company_size) VALUES ({company.Id}, '{company.Name}', '{company.RegisterNumber}', '{company.Business}', '{company.BirthDate}', '{company.Address}', {(int)company.Status}, {(int)company.CompanySize});";
-                    DbConnection.Open();
+                    string cmd = $"INSERT INTO company (company_name, cnpj, business_branch, open_date, adress, status, company_size) VALUES ('{company.Name}', '{company.RegisterNumber}', '{company.Business}', '{company.BirthDate}', '{company.Address}', {(int)company.Status}, {(int)company.CompanySize});";
                     Command.CommandText = cmd;
                     Command.Connection = DbConnection;
                     Command.ExecuteNonQuery();
@@ -90,16 +89,21 @@ namespace WpfLightProject.DataAccess
             finally
             {
                 DbConnection.Close();
-                Dispose();
             }
+
+            return company;
         }
 
         public List<ICompany> Select()
         {
             try
             {
+                if (DbConnection.State != ConnectionState.Open)
+                {
+                    DbConnection.Open();
+                }
+
                 string cmd = $"SELECT * FROM company;";
-                DbConnection.Open();
                 Command.CommandText = cmd;
                 Command.Connection = DbConnection;
                 DataAdapter.Fill(DataSet, "company");
@@ -122,9 +126,7 @@ namespace WpfLightProject.DataAccess
 
                         CompaniesList.Add(company);
                     }
-
                 }
-
             }
             catch (Exception ex)
             {
@@ -135,20 +137,23 @@ namespace WpfLightProject.DataAccess
                 DbConnection.Close();
                 DataAdapter.Dispose();
                 DataSet = null;
-                Dispose();
             }
 
             return CompaniesList;
         }
 
-        public void Update(ICompany company)
+        public ICompany Update(ICompany company)
         {
             try
             {
+                if (DbConnection.State != ConnectionState.Open)
+                {
+                    DbConnection.Open();
+                }
+
                 if (_validateCompany.IsCompanyValid(company))
                 {
                     string cmd = $"UPDATE company SET company_name = '{company.Name}', cnpj = '{company.RegisterNumber}', business_branch = '{company.Business}', open_date = '{company.BirthDate}', adress = '{company.Address}', status = {(int)company.Status}, company_size = {(int)company.CompanySize};";
-                    DbConnection.Open();
                     Command.CommandText = cmd;
                     Command.Connection = DbConnection;
                     Command.ExecuteNonQuery();
@@ -161,13 +166,10 @@ namespace WpfLightProject.DataAccess
             finally
             {
                 DbConnection.Close();
-                Dispose();
+                DbConnection.Dispose();
             }
-        }
 
-        public void Dispose()
-        {
-
+            return company;
         }
     }
 }

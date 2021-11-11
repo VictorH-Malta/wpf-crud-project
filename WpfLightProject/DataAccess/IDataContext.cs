@@ -4,7 +4,7 @@ using System.Data.Common;
 
 namespace WpfLightProject.DataAccess
 {
-    public interface IDataContext : IDisposable
+    public interface IDataContext
     {
         string ConnectionString { get; }
         IDbConnection DbConnection { get; set; }

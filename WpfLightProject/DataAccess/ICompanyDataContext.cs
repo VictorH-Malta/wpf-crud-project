@@ -8,9 +8,9 @@ namespace WpfLightProject.DataAccess
     {
         ICompany Company { get; set; }
         List<ICompany> CompaniesList { get; set; }
-        void Insert(ICompany company);
-        void Delete(ICompany company);
-        void Update(ICompany company);
+        ICompany Insert(ICompany company);
+        ICompany Delete(ICompany company);
+        ICompany Update(ICompany company);
         List<ICompany> Select();
     }
 }
