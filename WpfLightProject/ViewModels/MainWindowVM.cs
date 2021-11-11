@@ -11,7 +11,7 @@ namespace WpfLightProject.ViewModels
 {
     public class MainWindowVM : ViewModelBase
     {
-        public ICompanyDataContext CompanyContext { get; private set; }
+        private ICompanyDataContext CompanyContext { get; set; }
         public ObservableCollection<ICompany> CompanyList { get; set; }
         private Company _selectedCompany;
         public Company SelectedCompany

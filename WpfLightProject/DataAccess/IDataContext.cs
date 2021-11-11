@@ -1,11 +1,10 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
 using System.Data;
 using System.Data.Common;
-using WpfLightProject.Models;
 
 namespace WpfLightProject.DataAccess
 {
-    public interface IDataContext
+    public interface IDataContext : IDisposable
     {
         string ConnectionString { get; }
         IDbConnection DbConnection { get; set; }
