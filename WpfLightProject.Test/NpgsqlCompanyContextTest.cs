@@ -1,62 +1,123 @@
 ﻿using NUnit.Framework;
 using Moq;
-using WpfLightProject.Models;
-using WpfLightProject.Models.Enums;
-using WpfLightProject.DataAccess;
 using System;
-using WpfLightProject.ViewModels;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using WpfLightProject.DataAccess;
+using WpfLightProject.Models;
+using WpfLightProject.ViewModels;
+using WpfLightProject.Models.Validations;
 
 namespace WpfLightProject.Test
 {
     [TestFixture]
     public class NpgsqlCompanyContextTest
     {
+        private ICompanyDataContext _npgsql;
+        private Mock<IValidateCompany> _mock;
         private ICompany _companyValid;
-        private ICompany _companyInvalid;
-        private NpgsqlCompanyContext _npgsqlCompanyContext;
 
         [SetUp]
         public void Init()
         {
-            _companyValid = new Company() { Address = "Rua Alberto Gomes, n 42, Apto 201, Alto Umuarama, Uberlândia-MG", Id = 2, BirthDate = DateTime.Parse("07/03/1996"), Business = BusinessBranch.HumanResource, CompanySize = CompanySize.Large, Name = "Empresa do Victor", RegisterNumber = "28317258000135", Status = Status.Active };
-            _companyInvalid = new Company() { Address = "", Id = -1, BirthDate = DateTime.Now, Business = BusinessBranch.Marketing, CompanySize = CompanySize.Small, RegisterNumber = "12345678945", Status = Status.Active, Name = "Empresa fictícia" };
-            _npgsqlCompanyContext = new NpgsqlCompanyContext();
+            _npgsql = new NpgsqlCompanyContext();
+            _mock = new Mock<IValidateCompany>();
+            _companyValid = new Company();
         }
 
-        [TearDown] 
+        [TearDown]
         public void CleanUp()
         {
 
         }
 
         [Test]
-        public void Insert_ShouldBeValidIfCompanyIsValid()
+        public void Insert_ShouldInsertIfCompanyIsValid()
         {
             //Arrange
-
+            _mock.Setup(x => x.IsCompanyValid(_companyValid)).Returns(true);
             Mock<ICompanyDataContext> mock = new Mock<ICompanyDataContext>();
+            mock.Setup(x => x.Insert(_companyValid)).Returns(_companyValid).Verifiable();
             //Act
-            mock.Setup(x => x.Insert(_companyValid)).Verifiable();
-
+            bool result = _mock.Object.IsCompanyValid(_companyValid);
             //Assert
+            Assert.That(result);
         }
 
         [Test]
-        public void Insert_ShouldNotBeValidIfCompanyInvalid()
+        public void Insert_ShouldNotInsertIfCompanyIsInvalid()
         {
+            _mock.Setup(x => x.IsCompanyValid(_companyValid)).Returns(false);
             Mock<ICompanyDataContext> mock = new Mock<ICompanyDataContext>();
+            mock.Setup(x => x.Insert(_companyValid)).Returns(_companyValid).Verifiable();
 
-            mock.Setup(x => x.Insert(_companyInvalid)).Verifiable();
+            bool result = _mock.Object.IsCompanyValid(_companyValid);
+
+            Assert.AreEqual(false, result);
         }
 
         [Test]
-        public void Select_ShouldReturnListOfCompanies()
+        public void Delete_ShouldDeleteIfCompanyIsValid()
         {
+            _mock.Setup(x => x.IsCompanyValid(_companyValid)).Returns(true);
             Mock<ICompanyDataContext> mock = new Mock<ICompanyDataContext>();
-            //Act
-            var companies = _npgsqlCompanyContext.Select();
-            Assert.AreEqual(_companyValid, companies);
+            mock.Setup(x => x.Delete(_companyValid)).Returns(_companyValid).Verifiable();
+
+            bool result = _mock.Object.IsCompanyValid(_companyValid);
+
+            Assert.That(result);
+        }
+
+        [Test]
+        public void Delete_ShouldNotDeleteIfCompanyIsInvalid()
+        {
+            _mock.Setup(x => x.IsCompanyValid(_companyValid)).Returns(false);
+            Mock<ICompanyDataContext> mock = new Mock<ICompanyDataContext>();
+            mock.Setup(x => x.Delete(_companyValid)).Returns(_companyValid).Verifiable();
+
+            bool result = _mock.Object.IsCompanyValid(_companyValid);
+
+            Assert.AreEqual(false, result);
+        }
+
+        [Test]
+        public void Update_ShouldUpdateIfCompanyIsValid()
+        {
+            _mock.Setup(x => x.IsCompanyValid(_companyValid)).Returns(true);
+            Mock<ICompanyDataContext> mock = new Mock<ICompanyDataContext>();
+            mock.Setup(x => x.Update(_companyValid)).Returns(_companyValid).Verifiable();
+
+            bool result = _mock.Object.IsCompanyValid(_companyValid);
+
+            Assert.That(result);
+        }
+
+        [Test]
+        public void Update_ShouldNotUpdateIfCompanyIsInvalid()
+        {
+            _mock.Setup(x => x.IsCompanyValid(_companyValid)).Returns(false);
+            Mock<ICompanyDataContext> mock = new Mock<ICompanyDataContext>();
+            mock.Setup(x => x.Update(_companyValid)).Returns(_companyValid).Verifiable();
+
+            bool result = _mock.Object.IsCompanyValid(_companyValid);
+
+            Assert.AreEqual(false, result);
+        }
+
+        [Test]
+        public void Select_ShouldReturnListIfItsNull()
+        {
+            List<ICompany> list = new List<ICompany>();
+            list = null;
+
+            Mock<ICompanyDataContext> mock = new Mock<ICompanyDataContext>();
+            mock.Setup(x => x.CompaniesList);
+
+            var result = mock.Object.CompaniesList.Count;
+
+            Assert.AreEqual(list.Count, result);
         }
     }
 }

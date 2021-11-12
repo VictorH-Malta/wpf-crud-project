@@ -11,7 +11,7 @@ namespace WpfLightProject.ViewModels
 {
     public class MainWindowVM : ViewModelBase
     {
-        private ICompanyDataContext CompanyContext { get; set; }
+        private ICompanyDataContext _companyContext { get; set; }
         public ObservableCollection<ICompany> CompanyList { get; set; }
         private Company _selectedCompany;
         public Company SelectedCompany
@@ -34,8 +34,14 @@ namespace WpfLightProject.ViewModels
             DeleteCommand = new RelayCommand((param) => { Delete(); });
             EditCommand = new RelayCommand((param) => { Edit(); });
 
-            CompanyContext = new NpgsqlCompanyContext();
-            CompanyList = new ObservableCollection<ICompany>(CompanyContext.Select());
+            _companyContext = new NpgsqlCompanyContext();
+            CompanyList = new ObservableCollection<ICompany>(_companyContext.Select());
+        }
+
+        public MainWindowVM(ICompanyDataContext companyDataContext)
+        {
+            _companyContext = new NpgsqlCompanyContext();
+            CompanyList = new ObservableCollection<ICompany>(_companyContext.Select());
         }
 
         private void Register()
@@ -48,7 +54,7 @@ namespace WpfLightProject.ViewModels
 
             if (registerWindow.DialogResult.HasValue && registerWindow.DialogResult.Value)
             {
-               CompanyContext.Insert(company);
+               _companyContext.Insert(company);
                CompanyList.Add(company);
                SelectedCompany = company;
             }
@@ -58,7 +64,7 @@ namespace WpfLightProject.ViewModels
         {
             if (SelectedCompany != null)
             {
-                CompanyContext.Delete(SelectedCompany);
+                _companyContext.Delete(SelectedCompany);
                 CompanyList.Remove(SelectedCompany);
                 SelectedCompany = (Company)CompanyList.FirstOrDefault();
             }
@@ -66,14 +72,13 @@ namespace WpfLightProject.ViewModels
 
         private void Edit()
         {
-            
             RegisterWindow registerWindow = new RegisterWindow();
             registerWindow.DataContext = SelectedCompany;
             registerWindow.ShowDialog();
 
             if (registerWindow.DialogResult.HasValue && registerWindow.DialogResult.Value)
             {
-                CompanyContext.Update(SelectedCompany);
+                _companyContext.Update(SelectedCompany);
             }
         }
      }
